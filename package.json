@@ -4,7 +4,8 @@
   "description": "My amateur sudoku solving",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write \"{**/*.js,**/*.html}\" --print-width 120 --tab-width 4"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,8 @@
     "url": "https://github.com/noviewpoint/sudokuSolver/issues"
   },
   "homepage": "https://github.com/noviewpoint/sudokuSolver#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^1.17.1"
+  }
 }
