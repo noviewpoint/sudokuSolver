@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Amateur Sudoku Solver</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fafafa" />
+    <style>
+      body {
+        background-color: #8a8188;
+      }
+      div .grid {
+        float: left;
+        margin: 5px;
+      }
+      table.sudoku {
+        border: 3px solid black;
+      }
+      table.sudoku tr td {
+        padding: 1px;
+      }
+      table.sudoku tr td {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border: 1px solid grey;
+        text-align: center;
+        font: bold 15px Tahoma;
+        color: rgb(68, 148, 135);
+        background-color: beige;
+      }
+      table.sudoku tr:nth-child(3n) td {
+        border-bottom: 2px solid black;
+      }
+      table.sudoku tr td:nth-child(3n) {
+        border-right: 2px solid black;
+      }
+      table.sudoku tr:last-child td {
+        border-bottom: none;
+      }
+      table.sudoku tr td:last-child {
+        border-right: none;
+      }
+      table.sudoku tr:nth-child(-n+3) td:nth-child(-n+3) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(-n+3) td:nth-child(n+7) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(n+7) td:nth-child(-n+3) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(n+7) td:nth-child(n+7) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(4) td:nth-child(4) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(4) td:nth-child(5) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(4) td:nth-child(6) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(5) td:nth-child(4) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(5) td:nth-child(5) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(5) td:nth-child(6) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(6) td:nth-child(4) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(6) td:nth-child(5) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+      table.sudoku tr:nth-child(6) td:nth-child(6) {
+        background-color: aliceblue;
+        color: rgb(192, 100, 46);
+      }
+
+      button.button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        cursor: pointer;
+      }
+
+      .btn-group{
+        float: left;
+      }
+
+      .btn-group .button {
+        background-color: #4CAF50; /* Green */
+        border: 1px solid green;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        float: left;
+      }
+
+.btn-group .button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+.btn-group .button:hover {
+  background-color: #3e8e41;
+}
+
+    </style>
+  </head>
+
+  <body>
+
+    <div id="grid"></div>
+    <div class="btn-group">
+        <button class="button" onclick="htmlReset();" type="text">Reset</button>
+        <button class="button" onclick="htmlNew();" type="text">New</button>
+        <button class="button" onclick="htmlFullSolve();" type="text">Full Solve</button>
+        <button class="button" onclick="htmlSolveUntilGuess();" type="text">Solve Until Guess</button>
+        <button class="button" onclick="htmlNextStep();" type="text">Next step</button>
+    </div>   
+    
+    <script src="./generator.js"></script>
+    <script src="./solver.js"></script>
+    <script src="./index.js"></script>
+
+  </body>
+</html>

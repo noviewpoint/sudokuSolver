@@ -1,0 +1,23 @@
+{
+  "name": "sudokusolver",
+  "version": "1.0.0",
+  "description": "My amateur sudoku solving",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noviewpoint/sudokuSolver.git"
+  },
+  "keywords": [
+    "sudoku"
+  ],
+  "author": "David Brvar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/noviewpoint/sudokuSolver/issues"
+  },
+  "homepage": "https://github.com/noviewpoint/sudokuSolver#readme",
+  "dependencies": {}
+}
