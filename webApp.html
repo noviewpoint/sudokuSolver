@@ -32,8 +32,7 @@
                 vertical-align: top;
             }
             table.sudoku tr td.borderRed {
-                border: 1px solid black;
-                background-color: #ddeecf !important;
+                filter: invert(100%);
             }
             table.sudoku tr:nth-child(3n) td {
                 border-bottom: 2px solid black;
@@ -152,6 +151,7 @@
             <button class="button" onclick="htmlNextStep();" type="text">Next step</button>
         </div>
 
+        <script src="./utilities.js"></script>
         <script src="./generator.js"></script>
         <script src="./solver.js"></script>
         <script src="./index.js"></script>

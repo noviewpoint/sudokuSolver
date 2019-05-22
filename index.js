@@ -1,9 +1,3 @@
-const log = (...texts) => {
-    texts.map(text => {
-        console.log(text);
-    });
-};
-
 const storage = {
     solvedSudoku: null,
     unsolvedSudoku: null,
@@ -45,7 +39,8 @@ const runWholeIterator = storage => {
     console.time("Solution time");
     for (const value of storage.iterator) {
         // does not yield undefined at the end :)
-        storage.computedSudoku = value;
+        const { id, sudoku } = value;
+        storage.computedSudoku = sudoku;
     }
     console.timeEnd("Solution time");
 };
