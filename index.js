@@ -131,17 +131,18 @@ const renderHTML = (sudoku, operatingId) => {
         html += "<tr>";
         for (let j = 0; j < len; j++) {
             const id = `${i + 1}${j + 1}`;
-            const val = htmlFormatNumber(sudoku[i][j]);
+            const htmlVal = htmlFormatNumber(sudoku[i][j]);
 
-            if (id === operatingId) {
-                html += `<td id="${id}" ${val.length > 1 ? "class='borderRed'" : ""} type="text">${htmlFormatNumber(
-                    sudoku[i][j]
-                )}</td>`;
-            } else {
-                html += `<td id="${id}" ${val.length > 1 ? "class='unsolved'" : ""} type="text">${htmlFormatNumber(
-                    sudoku[i][j]
-                )}</td>`;
+            let className = "";
+            if (htmlVal.length > 1) {
+                className += "unsolved ";
             }
+            if (id === operatingId) {
+                className += "focused ";
+            }
+            className = className.trim();
+
+            html += `<td id="${id}" class="${className}" type="text">${htmlVal}</td>`;
         }
         html += "</tr>";
     }
