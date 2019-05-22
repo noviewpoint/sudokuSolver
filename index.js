@@ -147,7 +147,7 @@ const renderHTML = (sudoku, operatingId) => {
         html += "</tr>";
     }
 
-    html += "</table>";
+    html += "</table> ";
     document.getElementById(`grid`).innerHTML = html;
 };
 
