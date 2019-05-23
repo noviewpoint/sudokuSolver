@@ -4,13 +4,20 @@ const log = (...texts) => {
     });
 };
 
-const generateNumbersArray = length => {
+const generateNumbersArray = highestNumber => {
     const arr = [];
-    for (let i = 0; i < length; i++) {
+    for (let i = 0, len = highestNumber; i < len; i++) {
         const num = i + 1;
         arr.push(num.toString());
     }
     return arr;
+};
+
+const getStringDigits = highestNumber => {
+    return generateNumbersArray(highestNumber).reduce((str, num) => {
+        str += num;
+        return str;
+    }, "");
 };
 
 const shuffle = arr => {
@@ -22,7 +29,7 @@ const shuffle = arr => {
 };
 
 const shiftArrayToRight = (arr, howMuchRight) => {
-    for (let i = 0; i < howMuchRight; i++) {
+    for (let i = 0, len = howMuchRight; i < len; i++) {
         arr.unshift(arr.pop());
     }
     return arr;
@@ -48,13 +55,6 @@ const chunkArray = arr => {
         smallerArrays.push(copy.splice(0, chunkLength));
     }
     return smallerArrays;
-};
-
-const getStringDigits = howMany => {
-    return generateNumbersArray(howMany).reduce((str, num) => {
-        str += num;
-        return str;
-    }, "");
 };
 
 const getSquareList = (rows, columns) => {
@@ -85,6 +85,7 @@ const getUnits = (fields, unitList) => {
 const getPeers = (fields, units) => {
     const peers = new Map();
     fields.map(f => {
+        // set ensures only unique values
         const set = new Set();
         units.get(f).map(u => {
             u.map(fu => {
@@ -100,11 +101,10 @@ const getPeers = (fields, units) => {
 };
 
 const sudokuToString = arr2d => {
-    const len = arr2d.length;
     let str = "";
-    for (let i = 0; i < len; i++) {
+    for (let i = 0, len = arr2d.length; i < len; i++) {
         for (let j = 0; j < len; j++) {
-            str += sudoku[i][j];
+            str += arr2d[i][j];
         }
     }
     return str;

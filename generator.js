@@ -23,7 +23,7 @@ const generateSudoku = squareLength => {
     // first row
     sudoku[0] = shuffle(numbers);
 
-    for (let i = 1; i < squareLength; i++) {
+    for (let i = 1, len = squareLength; i < len; i++) {
         const copy = [...sudoku[i - 1]];
         sudoku[i] = shiftArrayToRight(copy, i % 3 === 0 ? 1 : 3);
     }
@@ -38,17 +38,17 @@ const stringToSudoku = (inputStr, maximumNumber = 9) => {
     const reformattedStr = [...inputStr].reduce((str, num) => {
         if (allowedNumbers.includes(num)) {
             str += num;
-        } else if (num === ".") {
+        } else if (num === "." || num === "x") {
             str += "0";
         }
         return str;
     }, "");
 
-    const len = Math.sqrt(reformattedStr.length);
-    if (!Number.isInteger(len)) throw new Error("Given sudoku in string form was not of square size");
+    const squareSize = Math.sqrt(reformattedStr.length);
+    if (!Number.isInteger(squareSize)) throw new Error("Given sudoku in string form was not of square size");
 
-    const arr = new Array(len);
-    for (let i = 0; i < len; i++) {
+    const arr = new Array(squareSize);
+    for (let i = 0, len = squareSize; i < len; i++) {
         arr[i] = new Array(len);
         for (let j = 0; j < len; j++) {
             const num = reformattedStr.charAt(i * len + j);
@@ -61,13 +61,13 @@ const stringToSudoku = (inputStr, maximumNumber = 9) => {
 };
 
 const generateHolesInSudoku = (solvedSudoku, howMuchHoles) => {
-    const len = solvedSudoku.length;
-    const max = len * len;
+    const squareSize = solvedSudoku.length;
+    const max = squareSize * squareSize;
     const numbers = generateNumbersArray(max);
     const shuffled = shuffle(numbers);
 
     const copy = JSON.parse(JSON.stringify(solvedSudoku));
-    for (let i = 0; i < howMuchHoles; i++) {
+    for (let i = 0, len = howMuchHoles; i < len; i++) {
         const number = Number(shuffled[i]) - 1;
         const ii = Math.floor(number / len);
         const jj = number % len;
