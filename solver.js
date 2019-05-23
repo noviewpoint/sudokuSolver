@@ -15,17 +15,20 @@ const units = getUnits(fields, unitList);
 const peers = getPeers(fields, units);
 
 function* computeSolution(sudoku, doLog = false) {
-
     const grid = sudokuToString(sudoku);
 
-    // Constraint propagation
-    const solution = parseGrid(grid);
+    for (const value of parseGrid(grid)) {
+        const { id, values } = value;
+        yield { id, sudoku: partialSolutionToSudoku(values, sudoku) };
+    }
 
-    yield { sudoku: solutionToSudoku(solution, sudoku) };
+    // Constraint propagation
+    // const solution = parseGrid(grid);
+
+    // yield { sudoku: solutionToSudoku(solution, sudoku) };
 }
 
-const parseGrid = (grid) => {
-
+function* parseGrid(grid) {
     // Convert grid to a map of possible values or return false if a contradiction is detected
 
     // To start, every field can be any digit, then assign values from the grid
@@ -41,16 +44,25 @@ const parseGrid = (grid) => {
 
     const map = getGridValues(grid);
     for (const [f, d] of map) {
-        if (digits.includes(d) && !assignValue(values, f, d)) {
-            return false;
+        if (digits.includes(d)) {
+            if (!assignValue(values, f, d)) {
+                return false;
+            } else {
+                yield { id: f, values };
+            }
+        } else {
+            yield { id: f, values };
         }
     }
-    return values;
 
-};
+    console.log("over1");
+    yield { values };
+
+    console.log("over2");
+    return { values };
+}
 
 const getGridValues = grid => {
-
     // Convert grid into a map of { field: char } with '0' for empties.
 
     if (grid.length !== fields.length) throw new Error("grid and fields have different lengths");
@@ -60,11 +72,9 @@ const getGridValues = grid => {
         gridValues.set(fields[i], grid[i]);
     }
     return gridValues;
-
 };
 
 const assignValue = (values, f, d) => {
-
     // Eliminate all other values (except d) from values.get(f) and propagate
 
     // Return values, except if a contradiction is detected return false
@@ -75,16 +85,15 @@ const assignValue = (values, f, d) => {
     }
 
     return false;
-
 };
 
 const eliminate = (values, f, d) => {
-
     // Eliminate d from values.get(f) ; propagate when values or places <= 2 ??? < 2
 
     // Return values, except if a contradiction is detected return false
 
-    if (!values.get(f).includes(d)) { // Already eliminated
+    if (!values.get(f).includes(d)) {
+        // Already eliminated
         return values;
     }
     values.set(f, values.get(f).replace(d, ""));
@@ -94,25 +103,22 @@ const eliminate = (values, f, d) => {
     if (values.get(f).length === 0) {
         return false; // Contradiction: removed last value
     } else if (values.get(f).length === 1) {
-
         const dd = values.get(f);
         if (!peers.get(f).every(ff => eliminate(values, ff, dd))) {
             return false;
         }
-
     }
 
     // If a unit 'u' is reduced to only one place for a value 'd', then put it there
 
     for (const u of units.get(f)) {
-        
         const dPlaces = [];
         for (const ff of u) {
             if (values.get(ff).includes(d)) {
                 dPlaces.push(ff);
             }
         }
-        
+
         if (dPlaces.length === 0) {
             return false; // Contradiction: no place for this value (or digit)
         } else if (dPlaces.length === 1) {
@@ -123,11 +129,9 @@ const eliminate = (values, f, d) => {
     }
 
     return values;
-
 };
 
-const solutionToSudoku = (solutionMap, sudoku) => {
-
+const partialSolutionToSudoku = (solutionMap, sudoku) => {
     const sudokuLength = sudoku.length;
     const changedSudoku = new Array(sudokuLength);
 
@@ -135,7 +139,9 @@ const solutionToSudoku = (solutionMap, sudoku) => {
         changedSudoku[i] = new Array(len);
         for (let j = 0; j < len; j++) {
             const id = `${i + 1}${j + 1}`;
-            changedSudoku[i][j] = solutionMap.get(id);
+            const val = solutionMap.get(id);
+            // TODO CHANGE - Hardcoded value
+            changedSudoku[i][j] = val.length < 6 ? solutionMap.get(id) : sudoku[i][j];
         }
     }
 

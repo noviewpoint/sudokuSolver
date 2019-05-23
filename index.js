@@ -2,7 +2,7 @@ const storage = {
     solvedSudoku: null,
     unsolvedSudoku: null,
     computedSudoku: null,
-    iterator: null
+    generator: null
 };
 
 const checkCorrectness = storage => {
@@ -23,21 +23,28 @@ const initNewSudoku = storage => {
     // console.log(temp2);
 };
 
-const addIterator = storage => {
-    if (storage.iterator === null) {
-        storage.iterator = computeSolution(storage.unsolvedSudoku);
+const addGenerator = storage => {
+    // Initializes generator
+    if (storage.generator === null) {
+        storage.generator = computeSolution(storage.unsolvedSudoku);
     }
 };
 
-const removeIterator = storage => {
-    if (storage.iterator) {
-        storage.iterator = null;
+const removeGenerator = storage => {
+    if (storage.generator) {
+        storage.generator = null;
     }
 };
 
-const runWholeIterator = storage => {
+const runWholeGenerator = storage => {
+    // yield* anotherGenerator(i); is basically a convenient shorthand for
+
+    // for (var value of anotherGenerator(i)) {
+    //     yield value;
+    // }
+
     console.time("Solution time");
-    for (const value of storage.iterator) {
+    for (const value of storage.generator) {
         // does not yield undefined at the end :)
         const { id, sudoku } = value;
         storage.computedSudoku = sudoku;
@@ -45,26 +52,26 @@ const runWholeIterator = storage => {
     console.timeEnd("Solution time");
 };
 
-const isIteratorResolved = storage => {
-    return storage.iterator === null;
+const isGeneratorResolved = storage => {
+    return storage.generator === null;
 };
 
 const htmlReset = () => {
-    removeIterator(storage);
+    removeGenerator(storage);
     initNewSudoku(storage);
-    addIterator(storage);
+    addGenerator(storage);
     renderHTML(storage.unsolvedSudoku);
 };
 const htmlNew = () => {
-    removeIterator(storage);
+    removeGenerator(storage);
     initNewSudoku(storage);
-    addIterator(storage);
+    addGenerator(storage);
     renderHTML(storage.unsolvedSudoku);
 };
 const htmlFullSolve = () => {
-    removeIterator(storage);
-    addIterator(storage);
-    runWholeIterator(storage);
+    removeGenerator(storage);
+    addGenerator(storage);
+    runWholeGenerator(storage);
     checkCorrectness(storage);
     renderHTML(storage.computedSudoku);
 };
@@ -73,16 +80,16 @@ const htmlSolveUntilGuess = () => {
 };
 
 const htmlNextStep = () => {
-    if (isIteratorResolved(storage)) return;
+    if (isGeneratorResolved(storage)) return;
 
-    const result = storage.iterator.next();
+    const result = storage.generator.next();
     if (result.value) {
         const { id, sudoku } = result.value;
         storage.computedSudoku = sudoku;
         renderHTML(sudoku, id);
     }
     if (result.done) {
-        removeIterator(storage);
+        removeGenerator(storage);
         checkCorrectness(storage);
     }
 };
@@ -152,4 +159,4 @@ const renderHTML = (sudoku, operatingId) => {
 };
 
 htmlNew();
-htmlFullSolve();
+// htmlFullSolve();
