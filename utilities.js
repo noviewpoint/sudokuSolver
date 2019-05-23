@@ -37,8 +37,8 @@ const shiftArrayToRight = (arr, howMuchRight) => {
 
 const cross = (first, second) => {
     const items = [];
-    for (let a of first) {
-        for (let b of second) {
+    for (const a of first) {
+        for (const b of second) {
             items.push(`${a}${b}`);
         }
     }
