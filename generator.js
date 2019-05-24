@@ -67,10 +67,10 @@ const generateHolesInSudoku = (solvedSudoku, howMuchHoles) => {
     const shuffled = shuffle(numbers);
 
     const copy = JSON.parse(JSON.stringify(solvedSudoku));
-    for (let i = 0, len = howMuchHoles; i < len; i++) {
+    for (let i = 0, divideWith = squareSize, len = howMuchHoles; i < len; i++) {
         const number = Number(shuffled[i]) - 1;
-        const ii = Math.floor(number / len);
-        const jj = number % len;
+        const ii = Math.floor(number / divideWith);
+        const jj = number % divideWith;
         if (copy[ii][jj] === "0") throw new Error(`Field [${ii}][${jj}] already set to '0'`);
         copy[ii][jj] = "0";
     }

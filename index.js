@@ -11,22 +11,24 @@ const checkCorrectness = storage => {
 };
 
 const initNewSudoku = storage => {
-    storage.solvedSudoku = stringToSudoku(
-        "483921657967345821251876493548132976729564138136798245372689514814253769695417382"
-    );
-    storage.unsolvedSudoku = stringToSudoku(
-        "003020600900305001001806400008102900700000008006708200002609500800203009005010300"
-    );
+    // storage.solvedSudoku = stringToSudoku(
+    //     "483921657967345821251876493548132976729564138136798245372689514814253769695417382"
+    // );
+    // storage.unsolvedSudoku = stringToSudoku(
+    //     "003020600900305001001806400008102900700000008006708200002609500800203009005010300"
+    // );
+    storage.solvedSudoku = generateSudoku(9);
+    storage.unsolvedSudoku = generateHolesInSudoku(storage.solvedSudoku, 60);
     const temp1 = generateSudoku(9);
     // console.log(temp1);
-    const temp2 = generateHolesInSudoku(storage.solvedSudoku, 45);
+    const temp2 = generateHolesInSudoku(storage.solvedSudoku, 60);
     // console.log(temp2);
 };
 
 const addGenerator = storage => {
     // Initializes generator
     if (storage.generator === null) {
-        storage.generator = computeSolution(storage.unsolvedSudoku);
+        storage.generator = computeSolution(sudokuToString(storage.unsolvedSudoku), storage.unsolvedSudoku);
     }
 };
 

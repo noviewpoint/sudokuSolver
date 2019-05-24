@@ -14,21 +14,81 @@ const unitList = [...rowsList, ...columnList, ...squareList];
 const units = getUnits(fields, unitList);
 const peers = getPeers(fields, units);
 
-function* computeSolution(sudoku, doLog = false) {
-    const grid = sudokuToString(sudoku);
+function search(values) {
+    // Using depth-first search and propagation, try all possible
 
-    for (const value of parseGrid(grid)) {
-        const { id, values } = value;
-        yield { id, sudoku: partialSolutionToSudoku(values, sudoku) };
+    if (!values) {
+        // Failed earlier
+        return false;
     }
 
-    // Constraint propagation
-    // const solution = parseGrid(grid);
+    if (
+        fields.every(f => {
+            return values.get(f).length === 1;
+        })
+    ) {
+        // Solved!
+        return values;
+    }
 
-    // yield { sudoku: solutionToSudoku(solution, sudoku) };
+    // Choose the unfilled field f with the fewest possibilities
+    // Math.min(...getYs());
+
+    const { ff, n } = fields.reduce(
+        (min, f) => {
+            if (values.get(f).length > 1) {
+                if (!min[f]) {
+                    min.ff = f;
+                    min.n = values.get(f).length;
+                } else if (min.n > values.get(f).length) {
+                    min.ff = f;
+                    min.n = values.get(f).length;
+                }
+            }
+
+            return min;
+        },
+        { ff: null, n: null }
+    );
+
+    return some([...values.get(ff)], d => {
+        return search(assignValue(new Map(values), ff, d));
+    });
 }
 
-function* parseGrid(grid) {
+const some = (seq, cb) => {
+    for (let i = 0; i < seq.length; i++) {
+        const result = cb(seq[i]);
+        if (result) {
+            return result;
+        }
+    }
+    return false;
+};
+
+function solve(grid) {
+    const x = search(parseGrid(grid));
+    console.log("solve:", x);
+    // vcasih vrze number vcasih resen map ???
+    return x;
+    // return search(parseGrid(grid));
+}
+
+function* computeSolution(grid, sudoku) {
+    // Depth-first search
+
+    // Constraint propagation
+
+    const solution = solve(grid);
+    yield { id: null, sudoku: partialSolutionToSudoku(solution, sudoku) };
+
+    // for (const value of solve(grid)) {
+    //     const { id, values } = value;
+    //     yield { id, sudoku: partialSolutionToSudoku(values, sudoku) };
+    // }
+}
+
+function parseGrid(grid) {
     // Convert grid to a map of possible values or return false if a contradiction is detected
 
     // To start, every field can be any digit, then assign values from the grid
@@ -48,18 +108,26 @@ function* parseGrid(grid) {
             if (!assignValue(values, f, d)) {
                 return false;
             } else {
-                yield { id: f, values };
+                // return values;
+                // return { id: f, values };
+                // yield { id: f, values };
             }
         } else {
-            yield { id: f, values };
+            // return values;
+            // return { id: f, values };
+            // yield { id: f, values };
         }
     }
 
-    console.log("over1");
-    yield { values };
+    return values;
 
-    console.log("over2");
-    return { values };
+    // return { values };
+
+    // console.log("over1");
+    // yield { values };
+
+    // console.log("over2");
+    // return { values };
 }
 
 const getGridValues = grid => {
