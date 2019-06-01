@@ -15,7 +15,7 @@ const storage = {
 const checkCorrectness = (solved, computed) => {
     const isCorrect = compareSudokus(solved, computed);
     if (!isCorrect) {
-        log("Sudoku was solved incorrectly");
+        console.error("Sudoku was solved incorrectly");
     }
     return isCorrect;
 };
@@ -30,8 +30,8 @@ const initNewSudoku = storage => {
     //     "003020600900305001001806400008102900700000008006708200002609500800203009005010300"
     // );
 
-    const solvedSudoku = generateSudoku(9);
-    const unsolvedSudoku = generateHolesInSudoku(solvedSudoku, 40);
+    // const solvedSudoku = generateSudoku(9);
+    // const unsolvedSudoku = generateHolesInSudoku(solvedSudoku, 40);
 
     // BELOW IS AN EXAMPLE OF EXTRA HARD SUDOKU (SOLUTION TIME IS ABOUT A MINUTE)
 
@@ -62,32 +62,32 @@ const initNewSudoku = storage => {
     //     . . . |. . . |. . .
     // `);
 
-    // const solvedSudoku = stringToSudoku(`
-    //     4 1 7 |3 6 9 |8 2 5
-    //     6 3 2 |1 5 8 |9 4 7
-    //     9 5 8 |7 2 4 |3 1 6
-    //     ------+------+------
-    //     8 2 5 |4 3 7 |1 6 9
-    //     7 9 1 |5 8 6 |4 3 2
-    //     3 4 6 |9 1 2 |7 5 8
-    //     ------+------+------
-    //     2 8 9 |6 4 3 |5 7 1
-    //     5 7 3 |2 9 1 |6 8 4
-    //     1 6 4 |8 7 5 |2 9 3
-    // `);
-    // const unsolvedSudoku = stringToSudoku(`
-    //     4 . . |. . . |8 . 5
-    //     . 3 . |. . . |. . .
-    //     . . . |7 . . |. . .
-    //     ------+------+------
-    //     . 2 . |. . . |. 6 .
-    //     . . . |. 8 . |4 . .
-    //     . . . |. 1 . |. . .
-    //     ------+------+------
-    //     . . . |6 . 3 |. 7 .
-    //     5 . . |2 . . |. . .
-    //     1 . 4 |. . . |. . .
-    // `);
+    const solvedSudoku = stringToSudoku(`
+        4 1 7 |3 6 9 |8 2 5
+        6 3 2 |1 5 8 |9 4 7
+        9 5 8 |7 2 4 |3 1 6
+        ------+------+------
+        8 2 5 |4 3 7 |1 6 9
+        7 9 1 |5 8 6 |4 3 2
+        3 4 6 |9 1 2 |7 5 8
+        ------+------+------
+        2 8 9 |6 4 3 |5 7 1
+        5 7 3 |2 9 1 |6 8 4
+        1 6 4 |8 7 5 |2 9 3
+    `);
+    const unsolvedSudoku = stringToSudoku(`
+        4 . . |. . . |8 . 5
+        . 3 . |. . . |. . .
+        . . . |7 . . |. . .
+        ------+------+------
+        . 2 . |. . . |. 6 .
+        . . . |. 8 . |4 . .
+        . . . |. 1 . |. . .
+        ------+------+------
+        . . . |6 . 3 |. 7 .
+        5 . . |2 . . |. . .
+        1 . 4 |. . . |. . .
+    `);
 
     storage.solvedSudoku = solvedSudoku;
     storage.unsolvedSudoku = unsolvedSudoku;
@@ -111,8 +111,10 @@ const runWholeGenerator = storage => {
     console.time("ES6 solver took");
     for (const value of storage.generator) {
         // for ... of for generators does not yield undefined at the end :)
-        // const { id, sudoku } = value;
-        storage.computedSudoku = partialSolutionToSudoku(value);
+        const { id, values } = value;
+        if (values) {
+            storage.computedSudoku = partialSolutionToSudoku(values);
+        }
     }
     console.timeEnd("ES6 solver took");
 };
@@ -149,9 +151,8 @@ const htmlNextStep = () => {
 
     const result = storage.generator.next();
     if (result.value) {
-        // const { id, sudoku } = result.value;
-        const id = null;
-        storage.computedSudoku = partialSolutionToSudoku(result.value);
+        const { id, values } = result.value;
+        storage.computedSudoku = partialSolutionToSudoku(values);
         renderHTML(storage.computedSudoku, id);
     }
     if (result.done) {
@@ -187,6 +188,9 @@ const htmlFormatNumber = str => {
             if (superScripts[s]) {
                 accStr += superScripts[s];
             }
+            if (accStr.length > 4) {
+                accStr = `${accStr.substr(0, 4)}\n${accStr.slice(4)}`;
+            }
             return accStr;
         }, "");
     }
@@ -213,6 +217,12 @@ const renderHTML = (sudoku, operatingId) => {
                 className += "focused ";
             }
             className = className.trim();
+
+            if (document.getElementById(id) && document.getElementById(id).textContent.length === 1) {
+                document.getElementById(id).className = className;
+                html += document.getElementById(id).outerHTML;
+                continue;
+            }
 
             html += `<td id="${id}" class="${className}" type="text">${htmlVal}</td>`;
         }
@@ -245,4 +255,4 @@ const runHardPuzzles = () => {
     console.log(`Successfully solved ${countCorrect} of ${countAll} puzzles`);
 };
 
-setTimeout(runHardPuzzles, 17);
+// setTimeout(runHardPuzzles, 17);

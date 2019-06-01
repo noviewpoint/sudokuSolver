@@ -14,11 +14,14 @@ const unitList = [...rowsList, ...columnList, ...squareList];
 const units = getUnits(fields, unitList);
 const peers = getPeers(fields, units);
 
-function search(values) {
+function* search(values) {
+    console.log("search");
     // Using depth-first search and propagation, try all possible values
 
     if (!values) {
         // Failed earlier
+        console.log("FAILED");
+        yield { id: null, values };
         return false;
     }
 
@@ -28,6 +31,8 @@ function search(values) {
         })
     ) {
         // Solved!
+        console.log("SOLVED");
+        yield { id: null, values };
         return values;
     }
 
@@ -50,9 +55,23 @@ function search(values) {
 
     if (!values.has(ff)) throw new Error(`Values map does not have ${ff}`);
 
-    return some([...values.get(ff)], d => {
-        return search(assignValue(new Map(values), ff, d));
-    });
+    // return some([...values.get(ff)], d => {
+    //     return search(assignValue(new Map(values), ff, d));
+    // });
+
+    let isSome = false;
+    for (const d of [...values.get(ff)]) {
+        const result = assignValue(new Map(values), ff, d);
+        yield { id: ff, values: result };
+        const result2 = yield* search(result);
+        if (result2) {
+            isSome = result2;
+            break;
+        }
+    }
+
+    yield { id: null, values };
+    return isSome;
 }
 
 const some = (seq, cb) => {
@@ -68,10 +87,15 @@ const some = (seq, cb) => {
 function* solve(grid) {
     // Depth-first search
     // Constraint propagation
-    yield search(parseGrid(grid));
+    const { id, values } = yield* parseGrid(grid);
+    const values2 = yield* search(values);
+    yield { id: null, values: values2 };
+    return { id: null, values: values2 };
 }
 
-function parseGrid(grid) {
+function* parseGrid(grid) {
+    console.log("starting from parseGrid");
+
     // Convert grid to a map of possible values or return false if a contradiction is detected
 
     // To start, every field can be any digit, then assign values from the grid
@@ -89,12 +113,22 @@ function parseGrid(grid) {
     for (const [f, d] of map) {
         if (digits.includes(d)) {
             if (!assignValue(values, f, d)) {
-                return false;
+                console.log("Fail if we can't assign d to field f.");
+                return { id: f, values: false }; // Fail if we can't assign d to field f.
+            } else {
+                // david dodatek
+                yield { id: f, values };
             }
+        } else {
+            // david dodatek
+            yield { id: f, values };
         }
     }
 
-    return values;
+    console.log("returning from parseGrid");
+
+    // yield values;
+    return { id: null, values };
 }
 
 const getGridValues = grid => {
@@ -168,7 +202,9 @@ const eliminate = (values, f, d) => {
 
 const partialSolutionToSudoku = solutionMap => {
     const squareSize = Math.sqrt(solutionMap.size);
-    if (!Number.isInteger(Math.sqrt(squareSize))) throw new Error("Given sudoku in string form was not of square size");
+    if (!Number.isInteger(Math.sqrt(squareSize))) {
+        throw new Error("Given sudoku in string form was not of square size");
+    }
 
     const sudoku = new Array(squareSize);
     for (let i = 0, len = squareSize; i < len; i++) {
