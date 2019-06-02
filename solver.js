@@ -88,6 +88,7 @@ function* solve(grid) {
     // Depth-first search
     // Constraint propagation
     const { id, values } = yield* parseGrid(grid);
+    yield { guess: true, id, values };
     const values2 = yield* search(values);
     yield { id: null, values: values2 };
     return { id: null, values: values2 };
@@ -121,7 +122,7 @@ function* parseGrid(grid) {
             }
         } else {
             // david dodatek
-            yield { id: f, values };
+            // yield { id: f, values };
         }
     }
 

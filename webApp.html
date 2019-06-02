@@ -100,6 +100,7 @@
             }
 
             button.button {
+                cursor: pointer;
                 background-color: #4caf50; /* Green */
                 border: none;
                 color: white;
@@ -112,6 +113,11 @@
                 -webkit-transition-duration: 0.4s; /* Safari */
                 transition-duration: 0.4s;
                 cursor: pointer;
+            }
+
+            .button:active {
+                /* does not work :/ */
+                background-color: #abc3d3;
             }
 
             .btn-group {

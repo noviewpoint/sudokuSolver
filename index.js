@@ -110,7 +110,7 @@ const removeGenerator = storage => {
 const runWholeGenerator = storage => {
     console.time("ES6 solver took");
     for (const value of storage.generator) {
-        // for ... of for generators does not yield undefined at the end :)
+        // for ... of for generators ignores returned generator value (only yielded values)
         const { id, values } = value;
         if (values) {
             storage.computedSudoku = partialSolutionToSudoku(values);
@@ -143,7 +143,26 @@ const htmlFullSolve = () => {
     renderHTML(storage.computedSudoku);
 };
 const htmlSolveUntilGuess = () => {
-    log("htmlSolveUntilGuess()");
+    if (isGeneratorResolved(storage)) return;
+
+    let doWhile = true;
+    while (doWhile) {
+        const result = storage.generator.next();
+        if (result.value) {
+            const { id, values, guess } = result.value;
+            if (values) {
+                storage.computedSudoku = partialSolutionToSudoku(values);
+                renderHTML(storage.computedSudoku, id);
+            }
+            if (guess) {
+                doWhile = false;
+            }
+        }
+        if (result.done) {
+            removeGenerator(storage);
+            checkCorrectness(storage.solvedSudoku, storage.computedSudoku);
+        }
+    }
 };
 
 const htmlNextStep = () => {
@@ -152,8 +171,10 @@ const htmlNextStep = () => {
     const result = storage.generator.next();
     if (result.value) {
         const { id, values } = result.value;
-        storage.computedSudoku = partialSolutionToSudoku(values);
-        renderHTML(storage.computedSudoku, id);
+        if (values) {
+            storage.computedSudoku = partialSolutionToSudoku(values);
+            renderHTML(storage.computedSudoku, id);
+        }
     }
     if (result.done) {
         removeGenerator(storage);
@@ -188,8 +209,8 @@ const htmlFormatNumber = str => {
             if (superScripts[s]) {
                 accStr += superScripts[s];
             }
-            if (accStr.length > 4) {
-                accStr = `${accStr.substr(0, 4)}\n${accStr.slice(4)}`;
+            if (accStr.length === 5) {
+                accStr += "\n";
             }
             return accStr;
         }, "");
