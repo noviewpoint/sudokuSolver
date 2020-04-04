@@ -2,10 +2,10 @@
   "name": "sudokusolver",
   "version": "1.0.0",
   "description": "My amateur sudoku solving",
-  "main": "index.js",
+  "main": "init.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "prettier --write \"{**/*.js,**/*.html}\" --print-width 120 --tab-width 4"
+    "prettier": "npx prettier --write \"{*.js,*.html,*.css}\" --use-tabs true --print-width 120 --tab-width 4 --arrow-parens avoid --end-of-line crlf"
   },
   "repository": {
     "type": "git",
@@ -20,8 +20,5 @@
     "url": "https://github.com/noviewpoint/sudokuSolver/issues"
   },
   "homepage": "https://github.com/noviewpoint/sudokuSolver#readme",
-  "dependencies": {},
-  "devDependencies": {
-    "prettier": "^1.17.1"
-  }
+  "dependencies": {}
 }

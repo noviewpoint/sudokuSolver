@@ -17,14 +17,16 @@
 			<button class="button" onclick="htmlFullSolve(state);">Full Solve</button>
 			<button class="button" onclick="htmlSolveUntilGuess(state);">Solve Until Guess</button>
 			<button class="button" onclick="htmlNextStep(state);">Next step</button>
+			<button class="button" onclick="htmlBenchmark95HardSudokus(fakeState);">Benchmark 95 Hard Sudokus</button>
 		</div>
 
 		<script src="./actions.js"></script>
-		<script src="./other.js"></script>
+		<script src="./init.js"></script>
 		<script src="./utilities.js"></script>
 		<script src="./generator.js"></script>
 		<script src="./solver.js"></script>
 		<script src="./solutionsHardPuzzles.js"></script>
+		<script src="./render.js"></script>
 
 		<script>
 			// Global
@@ -35,6 +37,12 @@
 				generator: null,
 			};
 			htmlNew(state);
+			const fakeState = {
+				solvedSudoku: null,
+				unsolvedSudoku: null,
+				computedSudoku: null,
+				generator: null,
+			};
 		</script>
 	</body>
 </html>

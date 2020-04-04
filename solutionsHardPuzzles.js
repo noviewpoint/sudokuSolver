@@ -1,5 +1,5 @@
 const getHardSudokus = () => {
-    const solutionsHardPuzzles = `
+	const solutionsHardPuzzles = `
         4 . . |. . . |8 . 5 
         . 3 . |. . . |. . . 
         . . . |7 . . |. . . 
@@ -2471,20 +2471,20 @@ const getHardSudokus = () => {
         (0.08 seconds)
     `;
 
-    // Solved 95 of 95 hard puzzles (avg 0.04 secs (27 Hz), max 0.19 secs).
+	// Solved 95 of 95 hard puzzles (avg 0.04 secs (27 Hz), max 0.19 secs).
 
-    const lines = solutionsHardPuzzles.split("\n").filter(truthyS => truthyS);
-    const sudokus = [];
+	const lines = solutionsHardPuzzles.split("\n").filter(truthyS => truthyS);
+	const sudokus = [];
 
-    while (lines.length > 0) {
-        const chunk = lines.splice(0, 23);
-        if (chunk.length < 23) break;
-        sudokus.push({
-            unsolved: chunk.splice(0, 11).join(" "),
-            solved: chunk.splice(0, 11).join(" "),
-            solutionTime: chunk.splice(0, 1).join(" ")
-        });
-    }
+	while (lines.length > 0) {
+		const chunk = lines.splice(0, 23);
+		if (chunk.length < 23) break;
+		sudokus.push({
+			unsolved: chunk.splice(0, 11).join(" "),
+			solved: chunk.splice(0, 11).join(" "),
+			solutionTime: chunk.splice(0, 1).join(" "),
+		});
+	}
 
-    return sudokus;
+	return sudokus;
 };
