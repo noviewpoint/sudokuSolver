@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Sudoku Solver</title>
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#fafafa" />
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+
+	<body>
+		<div id="grid"></div>
+		<div class="btn-group">
+			<button class="button" onclick="htmlReset(state);">Reset</button>
+			<button class="button" onclick="htmlNew(state);">New</button>
+			<button class="button" onclick="htmlFullSolve(state);">Full Solve</button>
+			<button class="button" onclick="htmlSolveUntilGuess(state);">Solve Until Guess</button>
+			<button class="button" onclick="htmlNextStep(state);">Next step</button>
+		</div>
+
+		<script src="./actions.js"></script>
+		<script src="./other.js"></script>
+		<script src="./utilities.js"></script>
+		<script src="./generator.js"></script>
+		<script src="./solver.js"></script>
+		<script src="./solutionsHardPuzzles.js"></script>
+
+		<script>
+			// Global
+			const state = {
+				solvedSudoku: null,
+				unsolvedSudoku: null,
+				computedSudoku: null,
+				generator: null,
+			};
+			htmlNew(state);
+		</script>
+	</body>
+</html>
