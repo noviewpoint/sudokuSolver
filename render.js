@@ -33,8 +33,8 @@ const htmlFormatNumber = str => {
 	}
 };
 
-const renderHTML = (sudoku, operatingId) => {
-	const len = sudoku.length;
+const renderHtml = ({ unsolvedSudoku, computedSudoku, operatingId }) => {
+	const len = unsolvedSudoku.length;
 	let html = "<table cellspacing='0' class='sudoku'>";
 
 	// not used atm
@@ -44,13 +44,15 @@ const renderHTML = (sudoku, operatingId) => {
 		html += "<tr>";
 		for (let j = 0; j < len; j++) {
 			const id = `${i + 1}${j + 1}`;
-			const htmlVal = htmlFormatNumber(sudoku[i][j]);
+			const unsolvedVal = Array.isArray(unsolvedSudoku) ? htmlFormatNumber(unsolvedSudoku[i][j]) : "";
+			const computedVal = Array.isArray(computedSudoku) ? htmlFormatNumber(computedSudoku[i][j]) : "";
 
+			let htmlVal = unsolvedVal || computedVal;
 			let className = "";
+
 			if (htmlVal.length > 1) {
 				className += "unsolved ";
-			}
-			if (id === operatingId) {
+			} else if (id === operatingId) {
 				className += "focused ";
 			}
 			html += `<td id="${id}" class="${className.trim()}">${htmlVal}</td>`;

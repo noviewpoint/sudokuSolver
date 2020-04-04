@@ -110,7 +110,7 @@ const sudokuToString = arr2d => {
 	return str;
 };
 
-const compareSudokus = (a, b) => {
+const doSudokusMatch = (a, b) => {
 	if (typeof a === "string" && typeof b === "string") {
 		return a === b;
 	} else if (typeof a === "object" && typeof b === "object") {

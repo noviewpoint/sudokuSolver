@@ -1,3 +1,31 @@
+## sudokuSolver
+
+My idea for this project was to use the code from the "Solving Every Sudoku Puzzle" by Peter Norvig ( https://norvig.com/sudoku.html ) and transform it from Python v2 to functional ES6 JavaScript. 
+
+I wanted to learn how generators work in ES6 and then use them in action to pause the execution of functions. I decided that the user should be able to pause the execution of sudoku solving methods by clicking a button. This way he is able to see the sudoku solving process step by step right in front of him in real time.
+
+I also wanted to try github pages to host html app.
+
+## How to run it
+
+Run index.html locally from the browser. No server side needed.
+
+## Languages used
+
+HTML CSS vanilla JavaScript(ES6)
+
+## State of this project
+
+It's not a 100% complete but it works :) Understanding of ES6 generators went up a few levels though... :)
+
+
+
+
+## GITHUB STUFF HERE
+
+
+
+
 ## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/noviewpoint/sudokuSolver/edit/master/README.md) to maintain and preview the content for your website in Markdown files.

@@ -1,59 +1,61 @@
 const htmlReset = state => {
-	removeGenerator(state);
-	initNewSudoku(state);
-	addGenerator(state);
-	renderHTML(state.unsolvedSudoku);
+	if (!(state.solvedSudoku && state.unsolvedSudoku)) return;
+	state.computedSudoku = state.unsolvedSudoku;
+	state.sudokuGenerator = solve(sudokuToString(state.unsolvedSudoku));
+	renderHtml(state);
 };
 const htmlNew = state => {
-	removeGenerator(state);
-	initNewSudoku(state);
-	addGenerator(state);
-	renderHTML(state.unsolvedSudoku);
+	const { solvedSudoku, unsolvedSudoku } = getNewSudoku();
+	const sudokuGenerator = solve(sudokuToString(unsolvedSudoku));
+	state.solvedSudoku = solvedSudoku;
+	state.unsolvedSudoku = unsolvedSudoku;
+	state.computedSudoku = unsolvedSudoku;
+	state.sudokuGenerator = sudokuGenerator;
+	renderHtml(state);
 };
 const htmlFullSolve = state => {
-	removeGenerator(state);
-	addGenerator(state);
-	runWholeGenerator(state);
-	checkCorrectness(state.solvedSudoku, state.computedSudoku);
-	renderHTML(state.computedSudoku);
-	removeGenerator(state);
+	state.sudokuGenerator = solve(sudokuToString(state.unsolvedSudoku));
+	state.computedSudoku = fullSolve(state);
+	checkCorrectness(state);
+	state.sudokuGenerator = null;
+	renderHtml(state);
 };
 const htmlSolveUntilGuess = state => {
-	if (isGeneratorFinished(state)) return;
+	if (!state.sudokuGenerator) return;
 
 	let doWhile = true;
 	while (doWhile) {
-		const result = state.generator.next();
+		const result = state.sudokuGenerator.next();
 		if (result.value) {
 			const { id, values, guess } = result.value;
 			if (values) {
 				state.computedSudoku = partialSolutionToSudoku(values);
-				renderHTML(state.computedSudoku, id);
+				renderHtml({ ...state, operatingId: id });
 			}
 			if (guess) {
 				doWhile = false;
 			}
 		}
 		if (result.done) {
-			removeGenerator(state);
-			checkCorrectness(state.solvedSudoku, state.computedSudoku);
+			state.sudokuGenerator = null;
+			checkCorrectness(state);
 		}
 	}
 };
 const htmlNextStep = state => {
-	if (isGeneratorFinished(state)) return;
+	if (!state.sudokuGenerator) return;
 
-	const result = state.generator.next();
+	const result = state.sudokuGenerator.next();
 	if (result.value) {
 		const { id, values } = result.value;
 		if (values) {
 			state.computedSudoku = partialSolutionToSudoku(values);
-			renderHTML(state.computedSudoku, id);
+			renderHtml({ ...state, operatingId: id });
 		}
 	}
 	if (result.done) {
-		removeGenerator(state);
-		checkCorrectness(state.solvedSudoku, state.computedSudoku);
+		state.sudokuGenerator = null;
+		checkCorrectness(state);
 	}
 };
 const htmlBenchmark95HardSudokus = state => {

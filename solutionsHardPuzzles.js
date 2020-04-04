@@ -2480,8 +2480,8 @@ const getHardSudokus = () => {
 		const chunk = lines.splice(0, 23);
 		if (chunk.length < 23) break;
 		sudokus.push({
-			unsolved: chunk.splice(0, 11).join(" "),
-			solved: chunk.splice(0, 11).join(" "),
+			unsolvedSudoku: chunk.splice(0, 11).join(" "),
+			solvedSudoku: chunk.splice(0, 11).join(" "),
 			solutionTime: chunk.splice(0, 1).join(" "),
 		});
 	}
